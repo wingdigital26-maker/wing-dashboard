@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wing Digital Activity Dashboard</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#232a34; --ink:#e6edf3; --muted:#8b949e;
+    --accent:#3b82f6; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink)}
+  header{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;
+         align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  h1{font-size:18px;margin:0;letter-spacing:.2px}
+  h1 span{color:var(--accent)}
+  .meta{color:var(--muted);font-size:13px}
+  main{max-width:1080px;margin:0 auto;padding:24px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .tab{padding:7px 14px;border:1px solid var(--line);border-radius:999px;
+       color:var(--muted);text-decoration:none;font-size:13px}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .card .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .card .v{font-size:30px;font-weight:700;margin-top:6px}
+  .card .sub{color:var(--muted);font-size:12px;margin-top:4px}
+  h2{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;
+     margin:32px 0 12px;font-weight:600}
+  .banner{background:#2b2412;border:1px solid #5a4a1a;color:#f0d98a;border-radius:10px;
+          padding:12px 14px;font-size:13px;margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;background:var(--panel);
+        border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+  th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  tr:last-child td{border-bottom:none}
+  td a{color:var(--accent);text-decoration:none}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px}
+  .pill.on{background:rgba(34,197,94,.15);color:var(--good)}
+  .pill.off{background:rgba(245,158,11,.15);color:var(--warn)}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:28px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Wing <span>Digital</span> Activity Dashboard</h1>
+  <div class="meta" id="updated">loading…</div>
+</header>
+<main id="app">loading…</main>
+<footer id="foot"></footer>
+
+<script>
+const fmt = n => (n ?? 0).toLocaleString();
+const money = n => "$" + (n ?? 0).toLocaleString(undefined,{maximumFractionDigits:0});
+const qs = new URLSearchParams(location.search);
+const activeSlug = qs.get("client");
+
+function card(k, v, sub){
+  return `<div class="card"><div class="k">${k}</div><div class="v">${v}</div>${sub?`<div class="sub">${sub}</div>`:""}</div>`;
+}
+
+function renderMaster(d){
+  const m = d.master;
+  const openRate = m.emailsSent ? Math.round(100*m.emailsOpened/m.emailsSent) : 0;
+  let h = `<div class="grid">
+    ${card("Texts sent", fmt(m.textsSent))}
+    ${card("Emails sent", fmt(m.emailsSent), openRate+"% opened")}
+    ${card("Calls taken", fmt(m.callsTaken))}
+    ${card("Active clients", fmt(m.activeClients))}
+    ${card("Ad spend (30d)", money(m.adSpend))}
+    ${card("Ad leads (30d)", fmt(m.adLeads))}
+  </div>`;
+  h += `<h2>Clients</h2><table><tr><th>Client</th><th>Trade</th><th>Texts</th><th>Emails</th><th>Calls</th><th>Ad spend</th><th>Ads</th></tr>`;
+  for(const c of d.clients){
+    const a = c.activity||{}, ad = c.ads||{};
+    h += `<tr>
+      <td><a href="?client=${c.slug}">${c.name}</a></td>
+      <td>${c.trade||""}</td>
+      <td>${fmt(a.textsSent)}</td>
+      <td>${fmt(a.emailsSent)}</td>
+      <td>${fmt(a.callsTaken)}</td>
+      <td>${money(ad.spend)}</td>
+      <td>${ad.queryable?`<span class="pill on">live</span>`:`<span class="pill off">not linked</span>`}</td>
+    </tr>`;
+  }
+  h += `</table>`;
+  return h;
+}
+
+function renderClient(d, c){
+  const a = c.activity||{}, ad = c.ads||{};
+  const openRate = a.emailsSent ? Math.round(100*a.emailsOpened/a.emailsSent) : 0;
+  let h = `<div class="grid">
+    ${card("Texts sent", fmt(a.textsSent))}
+    ${card("Emails sent", fmt(a.emailsSent), openRate+"% opened")}
+    ${card("Emails opened", fmt(a.emailsOpened))}
+    ${card("Calls taken", fmt(a.callsTaken))}
+  </div>`;
+  h += `<h2>Facebook / Meta ads, last ${ad.days||30} days</h2>`;
+  if(!ad.queryable){
+    h += `<div class="banner">${ad.note || "Ad account not linked or not queryable yet."}</div>`;
+  }
+  h += `<div class="grid">
+    ${card("Spend", money(ad.spend))}
+    ${card("Impressions", fmt(ad.impressions))}
+    ${card("Reach", fmt(ad.reach))}
+    ${card("Clicks", fmt(ad.clicks))}
+    ${card("CPC", "$"+(ad.cpc||0))}
+    ${card("CTR", (ad.ctr||0)+"%")}
+    ${card("Leads", ad.leads ? fmt(ad.leads) : "n/a", ad.leads?"":"no conversion event")}
+  </div>`;
+  return h;
+}
+
+fetch("data.json?t="+Date.now()).then(r=>r.json()).then(d=>{
+  document.getElementById("updated").textContent =
+    "Updated " + new Date(d.updatedAt).toLocaleString();
+  const app = document.getElementById("app");
+  let tabs = `<div class="tabs"><a class="tab ${!activeSlug?"active":""}" href="?">Master</a>`;
+  for(const c of d.clients){
+    tabs += `<a class="tab ${activeSlug===c.slug?"active":""}" href="?client=${c.slug}">${c.name}</a>`;
+  }
+  tabs += `</div>`;
+  const client = activeSlug ? d.clients.find(c=>c.slug===activeSlug) : null;
+  app.innerHTML = tabs + (client ? renderClient(d, client) : renderMaster(d));
+  document.getElementById("foot").textContent =
+    "Wing Digital OS · auto-generated · " + (d.notes?.[0]||"");
+}).catch(e=>{
+  document.getElementById("app").innerHTML =
+    `<div class="banner">Could not load data.json — ${e}</div>`;
+});
+</script>
+</body>
+</html>

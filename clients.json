@@ -1,0 +1,14 @@
+{
+  "_comment": "One entry per client. env names point at secrets in ghl-cli/.env — NEVER put the actual token or location id here. adAccountId is the numeric Meta ad account id (or null until linked).",
+  "clients": [
+    {
+      "slug": "jackson-roofing",
+      "name": "Jackson Roofing Co",
+      "trade": "Roofing",
+      "city": "DFW, TX",
+      "pitEnv": "GHL_JACKSON_PIT",
+      "locationEnv": "GHL_JACKSON_LOCATION_ID",
+      "adAccountId": "1684863519461451"
+    }
+  ]
+}

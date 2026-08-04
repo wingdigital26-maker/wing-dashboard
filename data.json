@@ -1,0 +1,46 @@
+{
+  "updatedAt": "2026-08-04T22:52:39+00:00",
+  "master": {
+    "textsSent": 1,
+    "emailsSent": 322,
+    "emailsOpened": 0,
+    "callsTaken": 0,
+    "activeClients": 17,
+    "adSpend": 31.76,
+    "adLeads": 0
+  },
+  "clients": [
+    {
+      "slug": "jackson-roofing",
+      "name": "Jackson Roofing Co",
+      "trade": "Roofing",
+      "city": "DFW, TX",
+      "activity": {
+        "textsSent": 0,
+        "emailsSent": 0,
+        "emailsOpened": 0,
+        "callsTaken": 0
+      },
+      "ads": {
+        "accountId": "1684863519461451",
+        "queryable": true,
+        "note": "No lead conversion event configured in Meta yet, so cost-per-lead is blank.",
+        "spend": 31.76,
+        "impressions": 2223,
+        "reach": 1514,
+        "clicks": 43,
+        "cpc": 0.74,
+        "ctr": 1.93,
+        "leads": 0,
+        "cpl": 0,
+        "roas": 0,
+        "days": 30
+      }
+    }
+  ],
+  "notes": [
+    "Master view = Wing Digital outreach activity (texts/emails we send).",
+    "GHL activity pulled by pull_ghl.py; ad blocks pulled from the Meta MCP by the scheduled Claude agent.",
+    "Jackson Roofing ad account 1684863519461451 is live and reporting. Add GHL_JACKSON_PIT + GHL_JACKSON_LOCATION_ID to .env to light up Jackson's own texts/emails/calls."
+  ]
+}
