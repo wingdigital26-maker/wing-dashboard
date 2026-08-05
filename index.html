@@ -111,6 +111,26 @@ function renderClient(d, c){
     ${card("CTR", (ad.ctr||0)+"%")}
     ${card("Leads", ad.leads ? fmt(ad.leads) : "n/a", ad.leads?"":"no conversion event")}
   </div>`;
+
+  if(ad.groups && ad.groups.length){
+    h += `<h2>Where the ad money goes</h2>
+      <table><tr><th>Type</th><th>Campaigns</th><th>Spend</th><th>Impressions</th><th>Clicks</th><th>Leads</th></tr>`;
+    for(const g of ad.groups){
+      const label = g.type === "Lead" ? "Lead campaigns" : "Boosts &amp; engagement";
+      h += `<tr><td>${label}</td><td>${fmt(g.campaigns)}</td><td>${money(g.spend)}</td>
+        <td>${fmt(g.impressions)}</td><td>${fmt(g.clicks)}</td><td>${g.leads?fmt(g.leads):"n/a"}</td></tr>`;
+    }
+    h += `</table>`;
+  }
+  if(ad.campaigns && ad.campaigns.length){
+    h += `<h2>Per campaign</h2>
+      <table><tr><th>Campaign</th><th>Type</th><th>Spend</th><th>Clicks</th></tr>`;
+    for(const c of ad.campaigns){
+      const pill = c.type === "Lead" ? `<span class="pill on">Lead</span>` : `<span class="pill off">Boost</span>`;
+      h += `<tr><td>${c.name}</td><td>${pill}</td><td>${money(c.spend)}</td><td>${fmt(c.clicks)}</td></tr>`;
+    }
+    h += `</table>`;
+  }
   return h;
 }
 

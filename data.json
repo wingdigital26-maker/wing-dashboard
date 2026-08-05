@@ -6,7 +6,7 @@
     "emailsOpened": 0,
     "callsTaken": 0,
     "activeClients": 17,
-    "adSpend": 31.76,
+    "adSpend": 40.09,
     "adLeads": 0
   },
   "clients": [
@@ -24,17 +24,93 @@
       "ads": {
         "accountId": "1684863519461451",
         "queryable": true,
-        "note": "No lead conversion event configured in Meta yet, so cost-per-lead is blank.",
-        "spend": 31.76,
-        "impressions": 2223,
-        "reach": 1514,
-        "clicks": 43,
+        "note": "Almost all spend is boosted posts (clicks/engagement). Only one small lead campaign is running.",
+        "spend": 40.09,
+        "impressions": 2790,
+        "reach": 1867,
+        "clicks": 54,
         "cpc": 0.74,
-        "ctr": 1.93,
+        "ctr": 1.94,
         "leads": 0,
         "cpl": 0,
         "roas": 0,
-        "days": 30
+        "days": 30,
+        "groups": [
+          {
+            "type": "Lead",
+            "campaigns": 1,
+            "spend": 2.05,
+            "impressions": 290,
+            "clicks": 5,
+            "leads": 0
+          },
+          {
+            "type": "Boost",
+            "campaigns": 6,
+            "spend": 38.04,
+            "impressions": 2500,
+            "clicks": 49,
+            "leads": 0
+          }
+        ],
+        "campaigns": [
+          {
+            "name": "Post: 25+ years keeping North Texas dry",
+            "type": "Boost",
+            "spend": 10.31,
+            "impressions": 626,
+            "clicks": 17,
+            "leads": 0
+          },
+          {
+            "name": "Post: When was the last time someone looked at...",
+            "type": "Boost",
+            "spend": 9.59,
+            "impressions": 605,
+            "clicks": 14,
+            "leads": 0
+          },
+          {
+            "name": "Post: Filed a roof damage claim before...",
+            "type": "Boost",
+            "spend": 9.17,
+            "impressions": 675,
+            "clicks": 8,
+            "leads": 0
+          },
+          {
+            "name": "Post: 25+ years keeping North Texas dry (2)",
+            "type": "Boost",
+            "spend": 3.94,
+            "impressions": 207,
+            "clicks": 5,
+            "leads": 0
+          },
+          {
+            "name": "Post: Filed a roof damage claim before... (2)",
+            "type": "Boost",
+            "spend": 3.85,
+            "impressions": 323,
+            "clicks": 2,
+            "leads": 0
+          },
+          {
+            "name": "25+ Years - Lead Boost (Contact Form)",
+            "type": "Lead",
+            "spend": 2.05,
+            "impressions": 290,
+            "clicks": 5,
+            "leads": 0
+          },
+          {
+            "name": "Post: 5 signs your roof needs attention",
+            "type": "Boost",
+            "spend": 1.18,
+            "impressions": 64,
+            "clicks": 3,
+            "leads": 0
+          }
+        ]
       }
     }
   ],
