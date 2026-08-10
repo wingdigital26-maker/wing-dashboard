@@ -117,6 +117,20 @@ def count_location(token, location_id, since_ms):
             "emailsOpened": opened, "callsTaken": calls}
 
 
+def email_stats_totals():
+    """Run the authoritative email puller (ghl-cli/email_stats_live.py) and return
+    its totals dict {sent, delivered, opened, ...}, or None on failure."""
+    import subprocess
+    script = os.path.join(HERE, "..", "..", "ghl-cli", "email_stats_live.py")
+    try:
+        out = subprocess.run([sys.executable, script], capture_output=True,
+                             text=True, timeout=600)
+        return json.loads(out.stdout).get("totals")
+    except Exception as e:
+        log("email_stats_live failed:", e)
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=30)
@@ -139,6 +153,13 @@ def main():
     if master_token and master_loc:
         log("counting master location...")
         m = count_location(master_token, master_loc, since_ms)
+        # Emails: the conversation scan is windowed + can't see opens. The dedicated
+        # email_stats_live.py walks every email thread and polls real status, so use
+        # its authoritative all-time totals for sent/opened instead.
+        em = email_stats_totals()
+        if em:
+            m["emailsSent"] = em.get("sent", m["emailsSent"])
+            m["emailsOpened"] = em.get("opened", m["emailsOpened"])
         data.setdefault("master", {})
         data["master"].update(m)
 
